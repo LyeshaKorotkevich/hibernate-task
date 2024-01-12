@@ -1,4 +1,4 @@
-package ru.clevertec.config;
+package ru.clevertec.house.config;
 
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;

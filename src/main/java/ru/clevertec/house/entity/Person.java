@@ -1,4 +1,4 @@
-package ru.clevertec.entity;
+package ru.clevertec.house.entity;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
@@ -13,7 +13,7 @@ import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.clevertec.entity.listener.PersonListener;
+import ru.clevertec.house.entity.listener.PersonListener;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

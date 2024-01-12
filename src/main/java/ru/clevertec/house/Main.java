@@ -1,4 +1,4 @@
-package ru.clevertec;
+package ru.clevertec.house;
 
 public class Main {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package ru.clevertec.config;
+package ru.clevertec.house.config;
 
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Value;

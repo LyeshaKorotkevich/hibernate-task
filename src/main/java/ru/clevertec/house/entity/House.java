@@ -1,4 +1,4 @@
-package ru.clevertec.entity;
+package ru.clevertec.house.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.clevertec.entity.listener.HouseListener;
+import ru.clevertec.house.entity.listener.HouseListener;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
