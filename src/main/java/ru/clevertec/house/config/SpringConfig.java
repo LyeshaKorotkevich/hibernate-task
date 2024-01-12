@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.Properties;
 
 @Configuration
-@ComponentScan("ru.clevertec")
+@ComponentScan("ru.clevertec.house")
 @PropertySource("classpath:application.yml")
 @Import(DatabaseConfig.class)
 public class SpringConfig {
