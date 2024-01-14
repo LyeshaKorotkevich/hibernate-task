@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.house.dao.Dao;
 import ru.clevertec.house.entity.House;
+import ru.clevertec.house.exception.NotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,8 +41,11 @@ public class HouseDaoImpl implements Dao<House, UUID> {
     @Transactional(readOnly = true)
     public List<House> findAll(int pageNumber, int pageSize) {
         try (Session session = sessionFactory.openSession()) {
-//            List<House> houses = session.createQuery("select * from House").getResultList()
-//            return Optional.ofNullable(house);
+            List<House> houses = session.createQuery("FROM House", House.class)
+                    .setFirstResult((pageNumber - 1) * pageSize)
+                    .setMaxResults(pageSize)
+                    .getResultList();
+            return houses;
         }
     }
 
@@ -49,15 +53,12 @@ public class HouseDaoImpl implements Dao<House, UUID> {
     @Transactional
     public void update(UUID uuid, House obj) {
         try (Session session = sessionFactory.openSession()) {
-            Optional<House> houseToUpdate = this.findByUuid(uuid);
+            House houseToUpdate = session.get(House.class, uuid);
 
-            if (houseToUpdate.isPresent()) {
-                House house = houseToUpdate.get();
-                house.setArea(obj.getArea());
-                house.setCountry(obj.getCountry());
-                house.setCity(obj.getCity());
-                house.setStreet(obj.getStreet());
-                house.setNumber(obj.getNumber());
+            if (houseToUpdate != null) {
+                session.merge(obj);
+            } else {
+                throw NotFoundException.of(House.class, uuid);
             }
         }
     }
@@ -66,9 +67,12 @@ public class HouseDaoImpl implements Dao<House, UUID> {
     @Transactional
     public void delete(UUID uuid) {
         try (Session session = sessionFactory.openSession()) {
-            Optional<House> houseToDelete = this.findByUuid(uuid);
-            if (houseToDelete.isPresent()) {
+            House houseToDelete = session.get(House.class, uuid);
+
+            if (houseToDelete != null) {
                 session.remove(houseToDelete);
+            } else {
+                throw NotFoundException.of(House.class, uuid);
             }
         }
     }

@@ -6,7 +6,9 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.house.dao.Dao;
+import ru.clevertec.house.entity.House;
 import ru.clevertec.house.entity.Person;
+import ru.clevertec.house.exception.NotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,8 +42,11 @@ public class PersonDaoImpl implements Dao<Person, UUID> {
     @Transactional(readOnly = true)
     public List<Person> findAll(int pageNumber, int pageSize) {
         try (Session session = sessionFactory.openSession()) {
-//            List<House> houses = session.createQuery("select * from House").getResultList()
-//            return Optional.ofNullable(house);
+            List<Person> people =  session.createQuery("FROM Person ", Person.class)
+                    .setFirstResult((pageNumber - 1) * pageSize)
+                    .setMaxResults(pageSize)
+                    .getResultList();
+            return people;
         }
     }
 
@@ -49,14 +54,12 @@ public class PersonDaoImpl implements Dao<Person, UUID> {
     @Transactional
     public void update(UUID uuid, Person obj) {
         try (Session session = sessionFactory.openSession()) {
-            Optional<Person> personToUpdate = this.findByUuid(uuid);
+            Person personToUpdate = session.get(Person.class, uuid);
 
-            if (personToUpdate.isPresent()) {
-                Person person = personToUpdate.get();
-                person.setName(obj.getName());
-                person.setSurname(obj.getSurname());
-                person.setSex(obj.getSex());
-                person.setPassport(obj.getPassport());
+            if (personToUpdate != null) {
+                session.merge(obj);
+            } else {
+                throw NotFoundException.of(Person.class, uuid);
             }
         }
     }
@@ -65,9 +68,12 @@ public class PersonDaoImpl implements Dao<Person, UUID> {
     @Transactional
     public void delete(UUID uuid) {
         try (Session session = sessionFactory.openSession()) {
-            Optional<Person> personToDelete = this.findByUuid(uuid);
-            if (personToDelete.isPresent()) {
+            Person personToDelete = session.get(Person.class, uuid);
+
+            if (personToDelete != null) {
                 session.remove(personToDelete);
+            } else {
+                throw NotFoundException.of(Person.class, uuid);
             }
         }
     }
