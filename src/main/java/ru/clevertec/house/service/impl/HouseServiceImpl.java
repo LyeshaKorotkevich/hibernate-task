@@ -56,11 +56,12 @@ public class HouseServiceImpl implements HouseService {
     }
 
     @Override
-    public void update(UUID uuid, HouseRequest houseRequest) {
+    public HouseResponse update(UUID uuid, HouseRequest houseRequest) {
         log.info("Updating house with UUID: {}", uuid);
         House houseToUpdate = houseMapper.toHouse(houseRequest);
-        houseDao.update(uuid, houseToUpdate);
+        House updatedHouse = houseDao.update(uuid, houseToUpdate);
         log.info("House updated successfully. UUID: {}", uuid);
+        return houseMapper.toResponse(updatedHouse);
     }
 
     @Override

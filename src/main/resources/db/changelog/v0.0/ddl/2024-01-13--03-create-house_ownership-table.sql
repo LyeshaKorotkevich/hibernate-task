@@ -1,3 +1,4 @@
+--changeset LyeshaKorotkevich:3
 CREATE TABLE houseOwnership
 (
     house_id  BIGINT NOT NULL,

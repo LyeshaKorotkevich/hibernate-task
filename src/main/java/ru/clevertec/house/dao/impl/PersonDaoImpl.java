@@ -6,7 +6,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.house.dao.Dao;
-import ru.clevertec.house.entity.House;
 import ru.clevertec.house.entity.Person;
 import ru.clevertec.house.exception.NotFoundException;
 
@@ -52,12 +51,12 @@ public class PersonDaoImpl implements Dao<Person, UUID> {
 
     @Override
     @Transactional
-    public void update(UUID uuid, Person obj) {
+    public Person update(UUID uuid, Person obj) {
         try (Session session = sessionFactory.openSession()) {
             Person personToUpdate = session.get(Person.class, uuid);
 
             if (personToUpdate != null) {
-                session.merge(obj);
+                return session.merge(obj);
             } else {
                 throw NotFoundException.of(Person.class, uuid);
             }

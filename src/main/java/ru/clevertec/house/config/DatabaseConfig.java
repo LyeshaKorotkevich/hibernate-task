@@ -3,12 +3,14 @@ package ru.clevertec.house.config;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 
 @Configuration
+@ComponentScan("ru.clevertec.house")
 public class DatabaseConfig {
 
     @Value("${spring.datasource.username}")

@@ -10,6 +10,8 @@ import ru.clevertec.house.entity.Person;
 public interface PersonMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "uuid", ignore = true)
+    @Mapping(target = "livingHouse", ignore = true)
     @Mapping(target = "createDate", ignore = true)
     @Mapping(target = "updateDate", ignore = true)
     Person toPerson(PersonRequest personRequest);

@@ -51,12 +51,12 @@ public class HouseDaoImpl implements Dao<House, UUID> {
 
     @Override
     @Transactional
-    public void update(UUID uuid, House obj) {
+    public House update(UUID uuid, House obj) {
         try (Session session = sessionFactory.openSession()) {
             House houseToUpdate = session.get(House.class, uuid);
 
             if (houseToUpdate != null) {
-                session.merge(obj);
+                return session.merge(obj);
             } else {
                 throw NotFoundException.of(House.class, uuid);
             }

@@ -1,3 +1,4 @@
+--changeset LyeshaKorotkevich:5
 INSERT INTO people (uuid, name, surname, sex, create_date, update_date, house_id, passport_series, passport_number)
 VALUES
     ('f1e45a85-2d6f-4d2d-86d8-97a8bd1d12d2', 'John', 'Doe', 'Male', '2024-01-14 12:00:00', '2024-01-14 12:00:00', 1, 'ABC', '12345'),

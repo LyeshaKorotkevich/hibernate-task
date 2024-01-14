@@ -37,8 +37,9 @@ public interface Dao<T, V> {
      * Обновляет информацию об объекте.
      *
      * @param obj Объект для обновления.
+     * @return T
      */
-    void update(V uuid, T obj);
+    T update(V uuid, T obj);
 
     /**
      * Удаляет объект по его uuid.

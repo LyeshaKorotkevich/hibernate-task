@@ -57,11 +57,12 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public void update(UUID uuid, PersonRequest personRequest) {
+    public PersonResponse update(UUID uuid, PersonRequest personRequest) {
         log.info("Updating person with UUID: {}", uuid);
         Person personToUpdate = personMapper.toPerson(personRequest);
-        personDao.update(uuid, personToUpdate);
+        Person updatedPerson = personDao.update(uuid, personToUpdate);
         log.info("Person updated successfully. UUID: {}", uuid);
+        return personMapper.toResponse(updatedPerson);
     }
 
     @Override

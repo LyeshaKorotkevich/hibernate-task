@@ -18,10 +18,6 @@ import java.util.Properties;
 @EnableTransactionManagement
 @ComponentScan("ru.clevertec.house")
 @PropertySource("classpath:application.yml")
-@Import({DatabaseConfig.class,
-        WebMvcConfig.class,
-        HibernateConfig.class}
-)
 public class SpringConfig {
 
     @Bean

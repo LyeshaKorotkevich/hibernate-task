@@ -14,7 +14,7 @@ public interface HouseService {
 
     List<HouseResponse> findAll(int pageNumber, int pageSize);
 
-    void update(UUID uuid, HouseRequest houseRequest);
+    HouseResponse update(UUID uuid, HouseRequest houseRequest);
 
     void delete(UUID uuid);
 }

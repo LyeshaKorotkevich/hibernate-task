@@ -1,3 +1,4 @@
+--changeset LyeshaKorotkevich:4
 INSERT INTO houses (uuid, area, country, city, street, number, create_date)
 VALUES
     ('f47ac10b-58cc-4372-a567-0e02b2c3d479', 'North Area', 'Country A', 'City X', 'Street 123', 1, '2024-01-14 12:00:00'),

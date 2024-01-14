@@ -1,3 +1,4 @@
+--changeset LyeshaKorotkevich:6
 INSERT INTO houseOwnership (house_id, person_id)
 VALUES
     (1, 1),
