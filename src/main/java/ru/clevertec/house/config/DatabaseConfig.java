@@ -4,19 +4,20 @@ import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 
 @Configuration
 public class DatabaseConfig {
 
-    @Value("${datasource.username}")
+    @Value("${spring.datasource.username}")
     private String username;
 
-    @Value("${datasource.password}")
+    @Value("${spring.datasource.password}")
     private String password;
 
-    @Value("${datasource.url}")
+    @Value("${spring.datasource.url}")
     private String url;
 
     @Bean
@@ -26,5 +27,10 @@ public class DatabaseConfig {
         dataSource.setPassword(password);
         dataSource.setURL(url);
         return dataSource;
+    }
+
+    @Bean
+    public JdbcTemplate jdbcTemplate() {
+        return new JdbcTemplate(dataSource());
     }
 }

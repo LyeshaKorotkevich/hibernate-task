@@ -1,7 +1,11 @@
 package ru.clevertec.house.dto.request;
 
+import ru.clevertec.house.entity.House;
 import ru.clevertec.house.entity.Passport;
 import ru.clevertec.house.entity.Sex;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public record PersonRequest(
 
@@ -11,6 +15,11 @@ public record PersonRequest(
 
         Sex sex,
 
-        Passport passport
+        Passport passport,
+
+        List<House> owningHouses
 ) {
+    public PersonRequest {
+        owningHouses = new ArrayList<>();
+    }
 }

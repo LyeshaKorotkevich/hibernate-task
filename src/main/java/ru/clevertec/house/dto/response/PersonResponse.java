@@ -1,5 +1,6 @@
 package ru.clevertec.house.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import ru.clevertec.house.entity.Passport;
 import ru.clevertec.house.entity.Sex;
 
@@ -17,8 +18,10 @@ public record PersonResponse(
 
         Passport passport,
 
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
         LocalDateTime createDate,
 
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
         LocalDateTime updateDate
 ) {
 }

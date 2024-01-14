@@ -9,14 +9,19 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.Objects;
 import java.util.Properties;
 
 @Configuration
+@EnableTransactionManagement
 @ComponentScan("ru.clevertec.house")
 @PropertySource("classpath:application.yml")
-@Import(DatabaseConfig.class)
+@Import({DatabaseConfig.class,
+        WebMvcConfig.class,
+        HibernateConfig.class}
+)
 public class SpringConfig {
 
     @Bean
