@@ -56,6 +56,16 @@ public class HouseServiceImpl implements HouseService {
     }
 
     @Override
+    public List<HouseResponse> findHousesByPersonUuid(UUID uuid) {
+        log.info("Finding all houses. Person uuid: {}", uuid);
+        List<HouseResponse> houses = houseDao.findHousesByPersonUuid(uuid).stream()
+                .map(houseMapper::toResponse)
+                .toList();
+        log.info("Found {} houses.", houses.size());
+        return houses;
+    }
+
+    @Override
     public HouseResponse update(UUID uuid, HouseRequest houseRequest) {
         log.info("Updating house with UUID: {}", uuid);
         House houseToUpdate = houseMapper.toHouse(houseRequest);

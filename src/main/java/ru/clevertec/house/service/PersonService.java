@@ -14,6 +14,8 @@ public interface PersonService {
 
     List<PersonResponse> findAll(int pageNumber, int pageSize);
 
+    List<PersonResponse> findTenantsByHouseUuid(UUID houseUuid);
+
     PersonResponse update(UUID uuid, PersonRequest personRequest);
 
     void delete(UUID uuid);

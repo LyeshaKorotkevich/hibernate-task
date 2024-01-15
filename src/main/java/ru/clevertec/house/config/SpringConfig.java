@@ -5,8 +5,7 @@ import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -15,9 +14,9 @@ import java.util.Objects;
 import java.util.Properties;
 
 @Configuration
+@EnableAspectJAutoProxy
 @EnableTransactionManagement
 @ComponentScan("ru.clevertec.house")
-@PropertySource("classpath:application.yml")
 public class SpringConfig {
 
     @Bean

@@ -57,6 +57,15 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    public List<PersonResponse> findTenantsByHouseUuid(UUID houseUuid) {
+        List<PersonResponse> tenants = personDao.findTenantsByHouseUuid(houseUuid).stream()
+                .map(personMapper::toResponse)
+                .toList();
+        log.info("Found {} tenants.", tenants.size());
+        return tenants;
+    }
+
+    @Override
     public PersonResponse update(UUID uuid, PersonRequest personRequest) {
         log.info("Updating person with UUID: {}", uuid);
         Person personToUpdate = personMapper.toPerson(personRequest);

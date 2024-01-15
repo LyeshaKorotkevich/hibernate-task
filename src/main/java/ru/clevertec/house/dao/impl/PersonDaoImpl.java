@@ -3,6 +3,8 @@ package ru.clevertec.house.dao.impl;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.house.dao.Dao;
@@ -19,6 +21,8 @@ public class PersonDaoImpl implements Dao<Person, UUID> {
 
     private final SessionFactory sessionFactory;
 
+    private final JdbcTemplate jdbcTemplate;
+
     @Override
     @Transactional
     public Person save(Person obj) {
@@ -31,22 +35,25 @@ public class PersonDaoImpl implements Dao<Person, UUID> {
     @Override
     @Transactional(readOnly = true)
     public Optional<Person> findByUuid(UUID uuid) {
-        try (Session session = sessionFactory.openSession()) {
-            Person person = session.get(Person.class, uuid);
-            return Optional.ofNullable(person);
-        }
+        String sql = "SELECT * FROM people WHERE uuid = ?";
+        Person person = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Person.class), uuid).get(0);
+        return Optional.ofNullable(person);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Person> findAll(int pageNumber, int pageSize) {
         try (Session session = sessionFactory.openSession()) {
-            List<Person> people =  session.createQuery("FROM Person ", Person.class)
+            return session.createQuery("FROM Person ", Person.class)
                     .setFirstResult((pageNumber - 1) * pageSize)
                     .setMaxResults(pageSize)
                     .getResultList();
-            return people;
         }
+    }
+
+    public List<Person> findTenantsByHouseUuid(UUID houseUuid) {
+        String sql = "SELECT * FROM people p JOIN houses h ON h.id = p.house_id WHERE h.uuid = ? ";
+        return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Person.class), houseUuid);
     }
 
     @Override

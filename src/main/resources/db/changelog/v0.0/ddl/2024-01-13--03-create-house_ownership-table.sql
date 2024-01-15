@@ -1,4 +1,5 @@
 --changeset LyeshaKorotkevich:3
+DROP TABLE IF EXISTS houseOwnership;
 CREATE TABLE houseOwnership
 (
     house_id  BIGINT NOT NULL,

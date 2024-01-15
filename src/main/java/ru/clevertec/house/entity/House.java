@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.NaturalId;
 import ru.clevertec.house.entity.listener.HouseListener;
 
 import java.time.LocalDateTime;
@@ -30,6 +31,7 @@ public class House {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NaturalId
     @Column(name = "uuid", unique = true, nullable = false)
     private UUID uuid;
 

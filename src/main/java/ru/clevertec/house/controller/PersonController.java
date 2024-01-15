@@ -1,5 +1,6 @@
 package ru.clevertec.house.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,11 @@ public class PersonController {
         return ResponseEntity.ok(personService.findAll(pageNumber, pageSize));
     }
 
+    @GetMapping("/live/{uuid}")
+    public ResponseEntity<List<PersonResponse>> getTenants(@PathVariable UUID uuid) {
+        return ResponseEntity.ok(personService.findTenantsByHouseUuid(uuid));
+    }
+
     @GetMapping("/{uuid}")
     public ResponseEntity<PersonResponse> getByUuid(@PathVariable UUID uuid) {
 
@@ -42,7 +48,7 @@ public class PersonController {
 
     @SneakyThrows
     @PostMapping
-    public ResponseEntity<PersonResponse> save(@RequestBody PersonRequest personRequest) {
+    public ResponseEntity<PersonResponse> save(@Valid @RequestBody PersonRequest personRequest) {
 
         PersonResponse savedPerson = personService.save(personRequest);
         return ResponseEntity.created(new URI("/people/" + savedPerson.uuid())).body(savedPerson);
@@ -50,7 +56,7 @@ public class PersonController {
 
     @PutMapping("/{uuid}")
     public ResponseEntity<PersonResponse> update(@PathVariable UUID uuid,
-                                                 @RequestBody PersonRequest personRequest) {
+                                                 @Valid @RequestBody PersonRequest personRequest) {
 
         return ResponseEntity.ok(personService.update(uuid, personRequest));
     }
