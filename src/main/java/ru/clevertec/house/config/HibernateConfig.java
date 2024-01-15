@@ -12,8 +12,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 import java.util.Properties;
 
+/**
+ * Конфигурационный класс для настройки Hibernate и управления транзакциями.
+ */
 @Configuration
 @ComponentScan("ru.clevertec.house")
+@EnableTransactionManagement
 public class HibernateConfig {
 
     @Value("${spring.hibernate.ddl}")
@@ -25,6 +29,12 @@ public class HibernateConfig {
     @Value("${spring.hibernate.show_sql}")
     private String showSql;
 
+    /**
+     * Создает и возвращает менеджер транзакций для Hibernate.
+     *
+     * @param sessionFactory Фабрика сеансов Hibernate.
+     * @return Менеджер транзакций Hibernate.
+     */
     @Bean
     public PlatformTransactionManager hibernateTransactionManager(LocalSessionFactoryBean sessionFactory) {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();
@@ -32,6 +42,12 @@ public class HibernateConfig {
         return transactionManager;
     }
 
+    /**
+     * Создает и возвращает фабрику сеансов Hibernate.
+     *
+     * @param dataSource Источник данных для подключения к базе данных.
+     * @return Фабрика сеансов Hibernate.
+     */
     @Bean
     public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
@@ -41,6 +57,11 @@ public class HibernateConfig {
         return sessionFactory;
     }
 
+    /**
+     * Создает и возвращает свойства Hibernate, устанавливаемые в файле application.properties.
+     *
+     * @return Свойства Hibernate.
+     */
     private Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", ddl);

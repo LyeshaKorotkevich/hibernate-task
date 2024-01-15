@@ -12,9 +12,18 @@ import ru.clevertec.house.exception.NotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Обработчик исключений для обработки ошибок в контроллерах.
+ */
 @RestControllerAdvice
 public class ErrorHandler {
 
+    /**
+     * Обработчик исключений для ошибок валидации аргументов методов контроллеров.
+     *
+     * @param ex Исключение MethodArgumentNotValidException.
+     * @return ResponseEntity с информацией об ошибках валидации.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -27,6 +36,12 @@ public class ErrorHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
+    /**
+     * Обработчик исключений для ошибок "Не найдено" (HTTP 404).
+     *
+     * @param ex Исключение NotFoundException.
+     * @return ResponseEntity с информацией об ошибке "Не найдено".
+     */
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Map<String, String>> handleNotFoundException(NotFoundException ex) {

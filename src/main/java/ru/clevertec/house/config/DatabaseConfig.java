@@ -10,6 +10,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
+/**
+ * Конфигурационный класс для настройки базы данных.
+ */
 @Configuration
 @ComponentScan("ru.clevertec.house")
 @EnableTransactionManagement(proxyTargetClass = true)
@@ -24,6 +27,11 @@ public class DatabaseConfig {
     @Value("${spring.datasource.url}")
     private String url;
 
+    /**
+     * Создает и настраивает источник данных (DataSource) для подключения к базе данных.
+     *
+     * @return Источник данных для подключения к базе данных.
+     */
     @Bean
     public DataSource dataSource() {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
@@ -33,6 +41,11 @@ public class DatabaseConfig {
         return dataSource;
     }
 
+    /**
+     * Создает и возвращает объект JdbcTemplate для работы с базой данных.
+     *
+     * @return JdbcTemplate для работы с базой данных.
+     */
     @Bean
     public JdbcTemplate jdbcTemplate() {
         return new JdbcTemplate(dataSource());

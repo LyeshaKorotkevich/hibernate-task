@@ -13,12 +13,20 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import java.util.Objects;
 import java.util.Properties;
 
+/**
+ * Конфигурационный класс Spring приложения.
+ */
 @Configuration
 @EnableAspectJAutoProxy
 @EnableTransactionManagement
 @ComponentScan("ru.clevertec.house")
 public class SpringConfig {
 
+    /**
+     * Создает и возвращает постпроцессор бинов для обработки аннотации @Value и поддержки YAML-конфигурации.
+     *
+     * @return Постпроцессор бинов для обработки аннотации @Value и поддержки YAML-конфигурации.
+     */
     @Bean
     public BeanFactoryPostProcessor beanFactoryPostProcessor() {
         PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
