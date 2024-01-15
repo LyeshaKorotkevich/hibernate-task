@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/v0.0/ddl/2024-01-13--01-create-houses-table.sql
+  - include:
+      file: db/changelog/v0.0/ddl/2024-01-13--02-create-people-table.sql
+  - include:
+      file: db/changelog/v0.0/ddl/2024-01-13--03-create-house_ownership-table.sql
+  - include:
+      file: db/changelog/v0.0/dml/2024-01-13--01-insert-houses-table.sql
+  - include:
+      file: db/changelog/v0.0/dml/2024-01-13--02-insert-people-table.sql
+  - include:
+      file: db/changelog/v0.0/dml/2024-01-13--03-insert-house_ownership-table.sql
