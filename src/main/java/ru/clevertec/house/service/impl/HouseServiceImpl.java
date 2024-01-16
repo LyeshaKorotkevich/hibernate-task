@@ -12,6 +12,7 @@ import ru.clevertec.house.mapper.HouseMapper;
 import ru.clevertec.house.service.HouseService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -66,10 +67,27 @@ public class HouseServiceImpl implements HouseService {
     }
 
     @Override
+    public List<HouseResponse> findByFullText(String text) {
+        List<HouseResponse> houses = houseDao.findByFullText(text).stream()
+                .map(houseMapper::toResponse)
+                .toList();
+        log.info("Found {} houses.", houses.size());
+        return houses;
+    }
+
+    @Override
     public HouseResponse update(UUID uuid, HouseRequest houseRequest) {
         log.info("Updating house with UUID: {}", uuid);
         House houseToUpdate = houseMapper.toHouse(houseRequest);
         House updatedHouse = houseDao.update(uuid, houseToUpdate);
+        log.info("House updated successfully. UUID: {}", uuid);
+        return houseMapper.toResponse(updatedHouse);
+    }
+
+    @Override
+    public HouseResponse patch(UUID uuid, Map<String, Object> updates) {
+        log.info("Patching house with UUID: {}", uuid);
+        House updatedHouse = houseDao.patch(uuid, updates);
         log.info("House updated successfully. UUID: {}", uuid);
         return houseMapper.toResponse(updatedHouse);
     }

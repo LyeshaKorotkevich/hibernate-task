@@ -8,18 +8,20 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.clevertec.house.dao.Dao;
+import ru.clevertec.house.dao.HouseDao;
 import ru.clevertec.house.entity.House;
 import ru.clevertec.house.exception.NotFoundException;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class HouseDaoImpl implements Dao<House, UUID> {
+public class HouseDaoImpl implements HouseDao {
 
     private final SessionFactory sessionFactory;
 
@@ -65,10 +67,19 @@ public class HouseDaoImpl implements Dao<House, UUID> {
         }
     }
 
+    @Override
     public List<House> findHousesByPersonUuid(UUID personUuid) {
         String sql = "SELECT * FROM houses h JOIN houseOwnership ho ON h.id = ho.house_id JOIN people p ON ho.person_id = p.id WHERE p.uuid = ? ";
         return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(House.class), personUuid);
     }
+
+    @Override
+    public List<House> findByFullText(String text) {
+        String sql = "SELECT * FROM houses h WHERE h.area LIKE ? OR h.city LIKE ? OR h.country LIKE ? OR h.street LIKE ?";
+        String searchText = "%" + text + "%";
+        return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(House.class), searchText, searchText, searchText, searchText);
+    }
+
 
     @Override
     @Transactional
@@ -85,6 +96,37 @@ public class HouseDaoImpl implements Dao<House, UUID> {
                 return mergedHouse;
             } else {
                 log.warn("Attempted to update non-existent house with UUID: {}", uuid);
+                throw NotFoundException.of(House.class, uuid);
+            }
+        }
+    }
+
+    @Override
+    @Transactional
+    public House patch(UUID uuid, Map<String, Object> updates) {
+        try (Session session = sessionFactory.openSession()) {
+            House houseToUpdate = session
+                    .byNaturalId(House.class)
+                    .using("uuid", uuid)
+                    .load();
+
+            if (houseToUpdate != null) {
+                updates.forEach((key, value) -> {
+                    Field field;
+                    try {
+                        field = House.class.getDeclaredField(key);
+                        field.setAccessible(true);
+                        field.set(houseToUpdate, value);
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        log.warn("Failed to apply update for field {}: {}", key, e.getMessage());
+                    }
+                });
+
+                House mergedHouse = session.merge(houseToUpdate);
+                log.info("Patched house with UUID: {}", uuid);
+                return mergedHouse;
+            } else {
+                log.warn("Attempted to patch non-existent house with UUID: {}", uuid);
                 throw NotFoundException.of(House.class, uuid);
             }
         }

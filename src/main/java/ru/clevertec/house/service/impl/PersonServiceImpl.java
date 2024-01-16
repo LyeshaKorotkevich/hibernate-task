@@ -12,6 +12,7 @@ import ru.clevertec.house.mapper.PersonMapper;
 import ru.clevertec.house.service.PersonService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -66,11 +67,28 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    public List<PersonResponse> findByFullText(String text) {
+        List<PersonResponse> people = personDao.findByFullText(text).stream()
+                .map(personMapper::toResponse)
+                .toList();
+        log.info("Found {} houses.", people.size());
+        return people;
+    }
+
+    @Override
     public PersonResponse update(UUID uuid, PersonRequest personRequest) {
         log.info("Updating person with UUID: {}", uuid);
         Person personToUpdate = personMapper.toPerson(personRequest);
         Person updatedPerson = personDao.update(uuid, personToUpdate);
         log.info("Person updated successfully. UUID: {}", uuid);
+        return personMapper.toResponse(updatedPerson);
+    }
+
+    @Override
+    public PersonResponse patch(UUID uuid, Map<String, Object> updates) {
+        log.info("Patching person with UUID: {}", uuid);
+        Person updatedPerson = personDao.patch(uuid, updates);
+        log.info("Person patched successfully. UUID: {}", uuid);
         return personMapper.toResponse(updatedPerson);
     }
 

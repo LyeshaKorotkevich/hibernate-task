@@ -1,6 +1,7 @@
 package ru.clevertec.house.dao;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -33,6 +34,8 @@ public interface Dao<T, V> {
      */
     List<T> findAll(int pageNumber, int pageSize);
 
+    List<T> findByFullText(String text);
+
     /**
      * Обновляет информацию об объекте.
      *
@@ -40,6 +43,8 @@ public interface Dao<T, V> {
      * @return T
      */
     T update(V uuid, T obj);
+
+    T patch(V uuid, Map<String, Object> map);
 
     /**
      * Удаляет объект по его uuid.

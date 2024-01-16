@@ -52,7 +52,7 @@ public class House {
 
     @Column(name = "number", nullable = false)
     private int number;
-
+    
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
 

@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,6 +20,7 @@ import ru.clevertec.house.service.PersonService;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -40,6 +42,12 @@ public class PersonController {
         return ResponseEntity.ok(personService.findTenantsByHouseUuid(uuid));
     }
 
+    @GetMapping("/search/{text}")
+    public ResponseEntity<List<PersonResponse>> getByUuid(@PathVariable String text) {
+
+        return ResponseEntity.ok(personService.findByFullText(text));
+    }
+
     @GetMapping("/{uuid}")
     public ResponseEntity<PersonResponse> getByUuid(@PathVariable UUID uuid) {
 
@@ -59,6 +67,13 @@ public class PersonController {
                                                  @Valid @RequestBody PersonRequest personRequest) {
 
         return ResponseEntity.ok(personService.update(uuid, personRequest));
+    }
+
+    @PatchMapping("/{uuid}")
+    public ResponseEntity<PersonResponse> patch(@PathVariable UUID uuid,
+                                               @RequestBody Map<String, Object> updates) {
+        PersonResponse patchedPerson = personService.patch(uuid, updates);
+        return ResponseEntity.ok(patchedPerson);
     }
 
     @DeleteMapping("/{uuid}")

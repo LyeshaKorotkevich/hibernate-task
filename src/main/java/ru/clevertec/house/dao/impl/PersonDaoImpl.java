@@ -1,23 +1,27 @@
 package ru.clevertec.house.dao.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.clevertec.house.dao.Dao;
+import ru.clevertec.house.dao.PersonDao;
 import ru.clevertec.house.entity.Person;
 import ru.clevertec.house.exception.NotFoundException;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
-public class PersonDaoImpl implements Dao<Person, UUID> {
+public class PersonDaoImpl implements PersonDao {
 
     private final SessionFactory sessionFactory;
 
@@ -51,9 +55,17 @@ public class PersonDaoImpl implements Dao<Person, UUID> {
         }
     }
 
+    @Override
     public List<Person> findTenantsByHouseUuid(UUID houseUuid) {
         String sql = "SELECT * FROM people p JOIN houses h ON h.id = p.house_id WHERE h.uuid = ? ";
         return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Person.class), houseUuid);
+    }
+
+    @Override
+    public List<Person> findByFullText(String text) {
+        String sql = "SELECT * FROM people p WHERE p.name LIKE ? OR p.surname LIKE ? ";
+        String searchText = "%" + text + "%";
+        return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Person.class), searchText, searchText);
     }
 
     @Override
@@ -65,6 +77,37 @@ public class PersonDaoImpl implements Dao<Person, UUID> {
             if (personToUpdate != null) {
                 return session.merge(obj);
             } else {
+                throw NotFoundException.of(Person.class, uuid);
+            }
+        }
+    }
+
+    @Override
+    @Transactional
+    public Person patch(UUID uuid, Map<String, Object> updates) {
+        try (Session session = sessionFactory.openSession()) {
+            Person personToUpdate = session
+                    .byNaturalId(Person.class)
+                    .using("uuid", uuid)
+                    .load();
+
+            if (personToUpdate != null) {
+                updates.forEach((key, value) -> {
+                    Field field;
+                    try {
+                        field = Person.class.getDeclaredField(key);
+                        field.setAccessible(true);
+                        field.set(personToUpdate, value);
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        log.warn("Failed to apply update for field {}: {}", key, e.getMessage());
+                    }
+                });
+
+                Person mergedPerson = session.merge(personToUpdate);
+                log.info("Patched house with UUID: {}", uuid);
+                return mergedPerson;
+            } else {
+                log.warn("Attempted to patch non-existent house with UUID: {}", uuid);
                 throw NotFoundException.of(Person.class, uuid);
             }
         }
