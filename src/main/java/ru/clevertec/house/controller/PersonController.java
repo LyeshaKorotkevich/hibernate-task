@@ -34,7 +34,7 @@ public class PersonController {
     public ResponseEntity<List<PersonResponse>> getAllPeople(@RequestParam(defaultValue = "1") int pageNumber,
                                                              @RequestParam(defaultValue = "15") int pageSize) {
 
-        return ResponseEntity.ok(personService.findAll(pageNumber, pageSize));
+        return ResponseEntity.ok(personService.findAll(pageNumber - 1, pageSize));
     }
 
     @GetMapping("/live/{uuid}")

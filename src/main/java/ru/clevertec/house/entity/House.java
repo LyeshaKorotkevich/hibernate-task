@@ -9,10 +9,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.NaturalId;
 import ru.clevertec.house.entity.listener.HouseListener;
 
 import java.time.LocalDateTime;
@@ -34,7 +35,6 @@ public class House {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NaturalId
     @Column(name = "uuid", unique = true, nullable = false)
     private UUID uuid;
 
@@ -52,8 +52,9 @@ public class House {
 
     @Column(name = "number", nullable = false)
     private int number;
-    
+
     @Column(name = "create_date", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createDate;
 
     @OneToMany(mappedBy = "livingHouse")

@@ -38,6 +38,6 @@ public class PersonListener {
     @PreUpdate
     public void preUpdate(Person person) {
         now = LocalDateTime.now();
-        person.setUpdateDate(now);
+        person.setUpdateDate(LocalDateTime.now());
     }
 }

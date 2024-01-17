@@ -34,7 +34,7 @@ public class HouseController {
     public ResponseEntity<List<HouseResponse>> getAllHouses(@RequestParam(defaultValue = "1") int pageNumber,
                                                             @RequestParam(defaultValue = "15") int pageSize) {
 
-        return ResponseEntity.ok(houseService.findAll(pageNumber, pageSize));
+        return ResponseEntity.ok(houseService.findAll(pageNumber - 1, pageSize));
     }
 
     @GetMapping("/{uuid}")

@@ -15,10 +15,11 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.NaturalId;
 import ru.clevertec.house.entity.listener.PersonListener;
 
 import java.time.LocalDateTime;
@@ -40,7 +41,6 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NaturalId
     @Column(name = "uuid",unique = true, nullable = false)
     private UUID uuid;
 
@@ -60,9 +60,11 @@ public class Person {
     private Passport passport;
 
     @Column(name = "create_date", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createDate;
 
     @Column(name = "update_date", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updateDate;
 
     @ManyToOne
@@ -71,7 +73,7 @@ public class Person {
 
     @ManyToMany
     @JoinTable(
-            name = "houseOwnership",
+            name = "house_ownership",
             joinColumns = @JoinColumn (name = "person_id"),
             inverseJoinColumns = @JoinColumn (name = "house_id" ))
     private List<House> owningHouses;
